@@ -1,0 +1,15 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ssm:SendCommand",
+        "ssm:GetCommandInvocation"
+      ],
+      "Resource": [
+        "arn:aws:ec2:eu-central-1:492184390594:instance/i-0367155e15770d3e4"
+      ]
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 services:
 
-  app:
-    build:
+    app:
+      image: mostafa2303/production-docker-stack:latest
       context: .
       dockerfile: Dockerfile
 
@@ -20,8 +20,7 @@ services:
     networks:
       - backend
 
-
-  db:
+db:
     image: postgres:17-alpine
 
     environment:
@@ -45,7 +44,7 @@ services:
       - backend
 
 
-  nginx:
+nginx:
     image: nginx:alpine
 
     ports:

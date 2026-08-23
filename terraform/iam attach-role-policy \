@@ -1,0 +1,29 @@
+{
+    "Role": {
+        "Path": "/",
+        "RoleName": "production-docker-github-actions",
+        "RoleId": "AROAXFGDZZPBNBJGTNCO4",
+        "Arn": "arn:aws:iam::492184390594:role/production-docker-github-actions",
+        "CreateDate": "2026-08-23T08:04:50+00:00",
+        "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Federated": "arn:aws:iam::492184390594:oidc-provider/token.actions.githubusercontent.com"
+                    },
+                    "Action": "sts:AssumeRoleWithWebIdentity",
+                    "Condition": {
+                        "StringEquals": {
+                            "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
+                        },
+                        "StringLike": {
+                            "token.actions.githubusercontent.com:sub": "repo:mostafaismail23398/production-docker-stack:*"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
