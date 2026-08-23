@@ -47,7 +47,7 @@ jobs:
           docker push \
             ${{ secrets.DOCKER_USERNAME }}/production-docker-stack:latest
 
-            - name: Debug GitHub OIDC claims
+      - name: Debug OIDC claims
         uses: actions/github-script@v8
         with:
           script: |
@@ -55,10 +55,7 @@ jobs:
             const payload = JSON.parse(
               Buffer.from(token.split('.')[1], 'base64url').toString()
             );
-
-            console.log("OIDC ISSUER:", payload.iss);
-            console.log("OIDC SUBJECT:", payload.sub);
-            console.log("OIDC AUDIENCE:", payload.aud);      
+            console.log(JSON.stringify(payload, null, 2));       
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v5
