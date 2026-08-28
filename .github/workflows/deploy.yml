@@ -52,14 +52,28 @@ jobs:
           aws-region: 'eu-central-1'
 
       - name: Deploy to EC2
-        env:
-          INSTANCE_ID: 'i-0367155e15770d3e4'
         run: |
+          COMPOSE_B64=$(base64 -w 0 docker-compose.yml)
+          NGINX_B64=$(base64 -w 0 nginx/nginx.conf)
+          PROMETHEUS_B64=$(base64 -w 0 monitoring/prometheus.yml)
+
           COMMAND_ID=$(aws ssm send-command \
-            --instance-ids "$INSTANCE_ID" \
-            --document-name 'AWS-RunShellScript' \
-            --parameters '{"commands":["cd /opt/production-docker-stack","docker compose pull","docker compose up -d","docker image prune -f"]}' \
-            --region 'eu-central-1' \
+            --instance-ids i-0367155e15770d3e4 \
+            --document-name AWS-RunShellScript \
+            --parameters "commands=[
+              \"mkdir -p /opt/production-docker-stack/nginx\",
+              \"mkdir -p /opt/production-docker-stack/monitoring\",
+              \"echo $COMPOSE_B64 | base64 -d > /opt/production-docker-stack/docker-compose.yml\",
+              \"echo $NGINX_B64 | base64 -d > /opt/production-docker-stack/nginx/nginx.conf\",
+              \"echo $PROMETHEUS_B64 | base64 -d > /opt/production-docker-stack/monitoring/prometheus.yml\",
+              \"cd /opt/production-docker-stack\",
+              \"docker compose config\",
+              \"docker compose pull\",
+              \"docker compose up -d\",
+              \"docker image prune -f\",
+              \"docker compose ps\"
+            ]" \
+            --region eu-central-1 \
             --query 'Command.CommandId' \
             --output text)
 
@@ -67,10 +81,10 @@ jobs:
 
           aws ssm wait command-executed \
             --command-id "$COMMAND_ID" \
-            --instance-id "$INSTANCE_ID" \
-            --region 'eu-central-1'
+            --instance-id i-0367155e15770d3e4 \
+            --region eu-central-1
 
           aws ssm get-command-invocation \
             --command-id "$COMMAND_ID" \
-            --instance-id "$INSTANCE_ID" \
-            --region 'eu-central-1'
+            --instance-id i-0367155e15770d3e4 \
+            --region eu-central-1
