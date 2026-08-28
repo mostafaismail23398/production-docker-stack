@@ -3,13 +3,16 @@
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "ssm:SendCommand",
-        "ssm:GetCommandInvocation"
-      ],
+      "Action": "ssm:SendCommand",
       "Resource": [
-        "arn:aws:ec2:eu-central-1:492184390594:instance/i-0367155e15770d3e4"
+        "arn:aws:ec2:eu-central-1:492184390594:instance/i-0367155e15770d3e4",
+        "arn:aws:ssm:eu-central-1::document/AWS-RunShellScript"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": "ssm:GetCommandInvocation",
+      "Resource": "*"
     }
   ]
 }
