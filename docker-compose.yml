@@ -41,7 +41,36 @@ services:
     networks:
       - backend
 
+  prometheus:
+    image: prom/prometheus:latest
 
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+
+    restart: unless-stopped
+
+    networks:
+      - backend
+
+
+  grafana:
+    image: grafana/grafana:latest
+
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+    depends_on:
+      - prometheus
+
+    restart: unless-stopped
+
+    networks:
+      - backend
   nginx:
     image: nginx:alpine
 
@@ -62,7 +91,8 @@ services:
 
 volumes:
   postgres_data:
-
+  prometheus_data:
+  grafana_data:
 
 networks:
   backend:
